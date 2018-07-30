@@ -18,21 +18,22 @@
 #define FIRESTORE_EXAMPLE_FUZZTESTS_FUZZINGTARGETS_FSTFUZZTESTFIELDVALUE_H_
 
 #import <Foundation/Foundation.h>
+#include <string>
 
 namespace firebase {
 namespace firestore {
 namespace fuzzing {
 
-// Returns the location of the FieldPath dictionary file.
-inline NSString *GetFieldValueDictionaryLocation(NSString *resources_location) {
-  return [resources_location stringByAppendingPathComponent:@"FieldValue/fieldvalue.dictionary"];
+// Returns the location of the FieldValue dictionary file.
+inline std::string GetFieldValueDictionaryLocation(std::string resources_location) {
+  return resources_location + "/FieldValue/fieldvalue.dictionary";
 }
 
-inline NSString *GetFieldValueCorpusLocation(NSString *resources_location) {
-  return [resources_location stringByAppendingPathComponent:@"FieldValue/Corpus"];
+inline std::string GetFieldValueCorpusLocation(std::string resources_location) {
+  return resources_location + "/FieldValue/Corpus";
 }
 
-// Fuzz-test creating FIRFieldPath objects.
+// Fuzz-test creating FIRFieldValue objects.
 int FuzzTestFieldValue(const uint8_t *data, size_t size);
 
 }  // namespace fuzzing

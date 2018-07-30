@@ -15,10 +15,12 @@
  */
 
 #import <Foundation/Foundation.h>
+#include <cstddef>
+#include <cstdint>
 
 #import "Firestore/Example/FuzzTests/FuzzingTargets/FSTFuzzTestFieldPath.h"
 
-#import "Firestore/Source/API/FIRFieldPath+Internal.h"
+#import "Firestore/Source/Public/FIRFieldPath.h"
 
 namespace firebase {
 namespace firestore {
@@ -29,28 +31,36 @@ int FuzzTestFieldPath(const uint8_t *data, size_t size) {
     // Convert the raw bytes to a string with UTF-8 format.
     NSData *d = [NSData dataWithBytes:data length:size];
     NSString *str = [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
+
+    // Fuzz test creating a FieldPath from an array with a single string.
+    NSArray *str_arr1 = [NSArray arrayWithObjects:str, nil];
     @try {
-      NSArray *str_arr1 = [NSArray arrayWithObjects:str, nil];
       [[FIRFieldPath alloc] initWithFields:str_arr1];
     } @catch (...) {
       // Caught exceptions are ignored because they are not what we are after in
       // fuzz testing.
     }
 
+    // Split the string into an array using " .,/-" as separators.
+    NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@" .,/_"];
+    NSArray *str_arr2 = [str componentsSeparatedByCharactersInSet:set];
     @try {
-      NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@" .,/_"];
-      NSArray *str_arr2 = [str componentsSeparatedByCharactersInSet:set];
       [[FIRFieldPath alloc] initWithFields:str_arr2];
     } @catch (...) {
-      // Caught exceptions are ignored because they are not what we are after in
-      // fuzz testing.
+      // Ignore caught exceptions.
     }
 
+    // Try to parse the bytes as a string array and use it for initialization.
+    // NSJSONReadingMutableContainers specifies that arrays and dictionaries are
+    // created as mutable objects. Returns nil if there is a parsing error.
+    NSArray *str_arr3 =
+        [NSJSONSerialization JSONObjectWithData:d options:NSJSONReadingMutableContainers error:nil];
     @try {
-      [FIRFieldPath pathWithDotSeparatedString:str];
+      if (str_arr3) {
+        [[FIRFieldPath alloc] initWithFields:str_arr3];
+      }
     } @catch (...) {
-      // Caught exceptions are ignored because they are not what we are after in
-      // fuzz testing.
+      // Ignore caught exceptions.
     }
   }
   return 0;

@@ -15,18 +15,20 @@
  */
 
 #import <Foundation/Foundation.h>
+#include <cstddef>
+#include <cstdint>
 
 #import "Firestore/Example/FuzzTests/FuzzingTargets/FSTFuzzTestSerializer.h"
 
 #include "Firestore/core/src/firebase/firestore/model/database_id.h"
 #include "Firestore/core/src/firebase/firestore/remote/serializer.h"
 
-using firebase::firestore::model::DatabaseId;
-using firebase::firestore::remote::Serializer;
-
 namespace firebase {
 namespace firestore {
 namespace fuzzing {
+
+using firebase::firestore::model::DatabaseId;
+using firebase::firestore::remote::Serializer;
 
 int FuzzTestDeserialization(const uint8_t *data, size_t size) {
   Serializer serializer{DatabaseId{"project", DatabaseId::kDefault}};
