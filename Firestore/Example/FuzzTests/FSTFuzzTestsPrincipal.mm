@@ -32,7 +32,7 @@ namespace fuzzing = firebase::firestore::fuzzing;
 
 // A list of targets to fuzz test. Should be kept in sync with the method
 // GetFuzzingTarget().
-enum class FuzzingTarget { kNone, kSerializer, kFieldPath };
+enum class FuzzingTarget { kNone, kSerializer, kFieldPath, kCollectionReference };
 
 // Directory to which crashing inputs are written. Must include the '/' at the
 // end because libFuzzer prepends this path to the crashing input file name.
@@ -64,6 +64,9 @@ FuzzingTarget GetFuzzingTarget() {
   }
   if (fuzzing_target == "FIELDPATH") {
     return FuzzingTarget::kFieldPath;
+  }
+  if (fuzzing_target == "COLLECTIONREFERENCE") {
+    return FuzzingTarget::kCollectionReference;
   }
   LOG_WARN("Invalid fuzzing target: %s", fuzzing_target);
   return FuzzingTarget::kNone;
