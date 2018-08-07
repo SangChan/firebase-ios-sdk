@@ -21,6 +21,11 @@
 #include "Firestore/core/src/firebase/firestore/remote/serializer.h"
 #include "Firestore/core/src/firebase/firestore/local/local_serializer.h"
 
+namespace firebase {
+namespace firestore {
+namespace fuzzing {
+namespace local_serializer {
+
 using firebase::firestore::model::DatabaseId;
 using firebase::firestore::remote::Serializer;
 using firebase::firestore::local::LocalSerializer;
@@ -46,3 +51,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   return 0;
 }
 
+}  // namespace local_serializer
+}  // namespace fuzzing
+}  // namespace firestore
+}  // namespace firebase
