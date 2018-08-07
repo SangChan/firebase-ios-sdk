@@ -51,6 +51,17 @@ add_custom_command(
       ${fuzzing_resources}/Serializer/Corpus/BinaryProtos serializer_fuzzer_seed_corpus
 )
 
+# Local serializer fuzzing target.
+cc_binary(
+  local_serializer_fuzzer
+  SOURCES
+    local_serializer_fuzzer.cc
+  DEPENDS
+    Fuzzer
+    firebase_firestore_remote
+    firebase_firestore_local
+)
+
 # FieldPath fuzzing target.
 cc_binary(
   fieldpath_fuzzer
